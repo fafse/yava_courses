@@ -4,7 +4,7 @@ public class Task2 {
     public static void main(String[] args) {
         Scanner scanner=new Scanner(System.in);
         double startEl,raznProgr,numMembers, sum = 0;
-        if(args.length!=0)
+        if(args.length==3)
         {
             startEl=Double.parseDouble(args[0]);
             raznProgr=Double.parseDouble(args[1]);
