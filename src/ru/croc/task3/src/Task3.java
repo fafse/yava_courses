@@ -35,6 +35,6 @@ public class Task3 {
             c.x=scanner.nextDouble();
             c.y=scanner.nextDouble();
         }
-        System.out.println(square(a,b,c));
+        System.out.println("Площадь треугольника = "+square(a,b,c));
     }
 }
