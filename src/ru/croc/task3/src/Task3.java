@@ -1,3 +1,5 @@
+package ru.croc.task3;
+
 import java.util.Scanner;
 import java.math.RoundingMode;
 

@@ -1,3 +1,5 @@
+package ru.croc.task2;
+
 import java.util.Scanner;
 
 public class Task2 {
