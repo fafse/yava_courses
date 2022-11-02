@@ -80,7 +80,7 @@ public class Task4 {
             if(idFigure==0)
             {
                 figure = new Rectangle(data);
-            }else
+            }else if(idFigure==1)
             {
                 figure = new Circle(data);
             }
@@ -95,7 +95,7 @@ public class Task4 {
         @Override
         public String toString()
         {
-            String name="";
+            String name="Unavailable to understand class of current obj";
             if(figure instanceof Rectangle)
             {
                 name="Rectangle ("+figure.x1+","+figure.y1+"), "+"("+((Rectangle) figure).x2+","+ ((Rectangle) figure).y2+"): "+sign;
