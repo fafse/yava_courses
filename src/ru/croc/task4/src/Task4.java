@@ -95,11 +95,11 @@ public class Task4 {
         @Override
         public String toString()
         {
-            String name;
+            String name="";
             if(figure instanceof Rectangle)
             {
                 name="Rectangle ("+figure.x1+","+figure.y1+"), "+"("+((Rectangle) figure).x2+","+ ((Rectangle) figure).y2+"): "+sign;
-            }else
+            }else if(figure instanceof Circle)
             {
                 name="Circle ("+figure.x1+","+figure.y1+"), "+((Circle)(figure)).radius+": "+sign;
             }
