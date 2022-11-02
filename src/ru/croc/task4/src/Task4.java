@@ -1,4 +1,4 @@
-package ru.croc.src.Task4;
+package ru.croc.Task4.src;
 
 import java.lang.module.Configuration;
 import java.util.Scanner;
