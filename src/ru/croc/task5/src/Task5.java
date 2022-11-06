@@ -246,12 +246,22 @@ public class Task5 {
         Annotation rectangle = Annotation.createObj(0,
                 "rectangle sign",
                 rectangleData);
+        Annotation objTmp=null;
         System.out.println(circle.toString());
         System.out.println(rectangle.toString());
         AnnotatedImage check = new AnnotatedImage("path",circle,rectangle);
-        System.out.println(
-        check.findByPoint(1,2).toString());
-        check.findByPoint(1,2).move(15,15);
+
+        objTmp= check.findByPoint(1,2);
+        if(objTmp!=null)
+        {
+            System.out.println(
+            objTmp.toString());
+        }
+        objTmp= check.findByPoint(1,2);
+        if(objTmp!=null)
+        {
+                    objTmp.move(15,15);
+        }
         System.out.println(
                 check.findByPoint(16,17).toString());
         System.out.println(
