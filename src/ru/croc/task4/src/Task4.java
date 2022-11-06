@@ -1,5 +1,6 @@
-package ru.croc.Task4.src;
+package ru.croc.task4.src;
 
+import java.io.PrintStream;
 import java.lang.module.Configuration;
 import java.util.Scanner;
 
@@ -20,6 +21,11 @@ public class Task4 {
             x2=points[2];
             y2=points[3];
         }
+        @Override
+        public String toString()
+        {
+            return "Rectangle "+ x1+","+y1+"), "+"("+ x2+","+ y2+"): ";
+        }
     }
 
     public static class Circle extends Figure
@@ -31,7 +37,11 @@ public class Task4 {
             super.y1=data[1];
             this.radius=data[2];
         }
-
+        @Override
+        public String toString()
+        {
+            return "Circle ("+x1+","+y1+"), "+radius+": ";
+        }
     }
 
     public static class Annotation
@@ -40,6 +50,7 @@ public class Task4 {
         private String sign;
         public static Annotation createObj(int idFigure, String sign,double...data)
         {
+            Figure tmpFigure;
             if(idFigure<0||idFigure>1)
             {
                 System.out.println("Unavailable to find this class id");
@@ -55,6 +66,7 @@ public class Task4 {
                             "\nSecond point should be the upper right corner");
                     return null;
                 }
+                tmpFigure = new Rectangle(data);
             }
             else if(idFigure==1&&
                     data.length==3)
@@ -63,27 +75,21 @@ public class Task4 {
                     System.out.println("Wrong radius(<0). Radius must be >=0");
                     return null;
                 }
+                tmpFigure = new Circle(data);
             }
             else {
                 System.out.println("Wrong number of arguments(data)");
                 return null;
             }
-            return new Annotation(idFigure,
-                    sign,
-                    data);
+            return new Annotation(tmpFigure,
+                    sign);
         }
 
-        private Annotation(int idFigure,
-                           String sign,
-                           double...data)
+        private Annotation(Figure figure,
+                           String sign)
         {
-            if(idFigure==0)
-            {
-                figure = new Rectangle(data);
-            }else if(idFigure==1)
-            {
-                figure = new Circle(data);
-            }
+                this.figure = figure;
+
             if(sign!=null&&
                     sign!="")
             {
@@ -96,20 +102,16 @@ public class Task4 {
         public String toString()
         {
             String name="Unavailable to understand class of current obj";
-            if(figure instanceof Rectangle)
-            {
-                name="Rectangle ("+figure.x1+","+figure.y1+"), "+"("+((Rectangle) figure).x2+","+ ((Rectangle) figure).y2+"): "+sign;
-            }else if(figure instanceof Circle)
-            {
-                name="Circle ("+figure.x1+","+figure.y1+"), "+((Circle)(figure)).radius+": "+sign;
-            }
+                name= figure.toString()+sign;
             return name;
         }
 
 
-
     }
-
+    public static String valueOf(Figure figure)
+    {
+        return figure==null? "null" : figure.toString();
+    }
 
     static class AnnotatedImage {
 
@@ -132,6 +134,16 @@ public class Task4 {
         public Annotation[] getAnnotations() {
             return this.annotations;
         }
+    }
+
+    public void print(String s)
+    {
+        System.out.print(String.valueOf(s));
+    }
+    public void println(String x)
+    {
+            System.out.println(String.valueOf(x));
+                print(x+"\n");
     }
 
     public static void main(String[] args) {
