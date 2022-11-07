@@ -13,13 +13,7 @@ public class Task5 {
     {
         protected double x1,y1;
 
-        public double getX1() {
-            return x1;
-        }
-
-        public double getY1() {
-            return y1;
-        }
+        public abstract Boolean havePoint(double x, double y);
     }
 
     public static class Rectangle extends Figure
@@ -44,12 +38,10 @@ public class Task5 {
             x2+=dx;
             y2+=dy;
         }
-        public double getY2() {
-            return y2;
-        }
+        public Boolean havePoint(double x, double y)
+        {
 
-        public double getX2() {
-            return x2;
+            return x<=x2&&x>=x1&&y<=y2&&y>=y1;
         }
     }
 
@@ -74,6 +66,13 @@ public class Task5 {
         }
         public double getRadius() {
             return radius;
+        }
+
+        public Boolean havePoint(double x, double y)
+        {
+            return (x-super.x1)*(x-super.x1)+
+                    (y-super.y1)*(y-super.y1)
+                    <=radius*radius;
         }
     }
 
@@ -117,7 +116,9 @@ public class Task5 {
             return new Annotation(tmpFigure,
                     sign);
         }
-
+        public boolean findByPoint(double x, double y) {
+            return figure.havePoint(x,y);
+        }
         private Annotation(Figure figure,
                            String sign)
         {
@@ -139,30 +140,6 @@ public class Task5 {
             return name;
         }
 
-        public Double[] getData() {
-            if(figure instanceof Rectangle)
-            {
-                Double[] data = new Double[4];
-                data[0]=figure.getX1();
-                data[1]=figure.getY1();
-                data[2]=((Rectangle) figure).getX2();
-                data[3]=((Rectangle) figure).getY2();
-                return data;
-            }else if(figure instanceof Circle)
-            {
-                Double[] data = new Double[3];
-                data[0]=figure.getX1();
-                data[1]=figure.getY1();
-                data[2]=((Circle) figure).getRadius();
-                return data;
-            }
-            return null;
-        }
-
-        public Figure getFigure() {
-            return figure;
-        }
-
         public String getSign() {
             return sign;
         }
@@ -180,8 +157,6 @@ public class Task5 {
 
         private final Annotation[] annotations;
 
-
-
         public AnnotatedImage(String imagePath,
                               Annotation... annotations) {
             this.imagePath = imagePath;
@@ -198,24 +173,12 @@ public class Task5 {
 
         public Annotation findByPoint(int x, int y)
         {
-            Double[] tmpData = new Double[4];
             for(Annotation annotation: annotations)
             {
-                tmpData= annotation.getData();
-                if(tmpData.length==3)
-                {
-                    if((x-tmpData[0])*(x-tmpData[0])+
-                            (y-tmpData[1])*(y-tmpData[1])
-                            <=tmpData[2]*tmpData[2])
-                    {
-                        return annotation;
-                    }
-                } else if (tmpData.length ==4) {
-                    if(x<=tmpData[2]&&x>=tmpData[0]&&y<=tmpData[3]&&y>=tmpData[1])
-                    {
-                        return annotation;
-                    }
-                }
+               if(annotation.findByPoint(x,y))
+               {
+                   return annotation;
+               }
             }
             return null;
         }
@@ -235,7 +198,7 @@ public class Task5 {
 
     public static void main(String[] args) {
         double[] circleData = new double[]
-                {0,0,3};
+                {0,0,5};
         double[] rectangleData = new double[]
                 {17,17,19,19};
         String textNull="";
@@ -249,22 +212,19 @@ public class Task5 {
         System.out.println(circle.toString());
         System.out.println(rectangle.toString());
         AnnotatedImage check = new AnnotatedImage("path",circle,rectangle);
+        System.out.println("===========");
+        System.out.println(check.findByPoint(-3,-3));
+        System.out.println("===========");
 
         objTmp= check.findByPoint(1,2);
-        if(objTmp!=null)
-        {
             System.out.println(
-            objTmp.toString());
-        }
+            objTmp);
         objTmp= check.findByPoint(1,2);
-        if(objTmp!=null)
-        {
                     objTmp.move(15,15);
-        }
         System.out.println(
-                check.findByPoint(16,17).toString());
+                check.findByPoint(16,17));
         System.out.println(
-                check.findByLabel("Te").toString()
+                check.findByLabel("Te")
         );
     }
 }
