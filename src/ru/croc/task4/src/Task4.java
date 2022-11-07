@@ -2,6 +2,7 @@ package ru.croc.task4.src;
 
 import java.io.PrintStream;
 import java.lang.module.Configuration;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Task4 {
@@ -108,10 +109,6 @@ public class Task4 {
 
 
     }
-    public static String valueOf(Figure figure)
-    {
-        return figure==null? "null" : figure.toString();
-    }
 
     static class AnnotatedImage {
 
@@ -136,15 +133,6 @@ public class Task4 {
         }
     }
 
-    public void print(String s)
-    {
-        System.out.print(String.valueOf(s));
-    }
-    public void println(String x)
-    {
-            System.out.println(String.valueOf(x));
-                print(x+"\n");
-    }
 
     public static void main(String[] args) {
         double[] circleData = new double[]
@@ -152,13 +140,15 @@ public class Task4 {
         double[] rectangleData = new double[]
                 {1,2,3,4};
         String textNull="";
+        Annotation nullFigure= null;
         Annotation circle = Annotation.createObj(1,
                 "Circle Text",
                 circleData);
         Annotation rectangle = Annotation.createObj(0,
                 "rectangle sign",
                 rectangleData);
-        System.out.println(circle.toString());
-        System.out.println(rectangle.toString());
+        System.out.println(circle);
+        System.out.println(rectangle);
+        System.out.println(nullFigure);
     }
 }
