@@ -23,6 +23,10 @@ public class Task6 {
     }
     public static String removeJavaComments(String source)
     {
+        if(source==null)
+        {
+            return null;
+        }
         Boolean isBlockComment_noEnd = false;
         int indexStart=-1,indexEnd=-1,indexStartBlock=-1,indexEndBlock=-1;
 
@@ -75,11 +79,8 @@ public class Task6 {
     }
 
     public static void main(String[] args) {
-        String source =
-                "//lol\n//holol\nhol\n/*loh\nhol\nlol\n*/"; // test data
-        String fileName ="C:\\Users\\k5469\\OneDrive\\Рабочий стол\\testing.txt";
-        String test = readFromFile(fileName);
-        System.out.println(removeJavaComments(test));
-        //System.out.println(removeComments(test));
+        String fileName =System.getProperty("user.dir")+"\\src\\"+"testing.txt";
+        System.out.println(fileName);
+        System.out.println(removeJavaComments(readFromFile(fileName)));
     }
 }
