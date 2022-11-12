@@ -17,61 +17,61 @@ public class Task6 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //здесь мы можем использовать разделитель, например: "\\A", "\\Z" или "\\z"
         String data = scanner.useDelimiter("\\A").next();
         scanner.close();
         return data;
     }
-    public static String removeComments(String source)
+    public static String removeJavaComments(String source)
     {
-        Boolean flag = false;
-        int indexStart=-1,indexEnd=-1;
-        String result="";
+        Boolean isBlockComment_noEnd = false;
+        int indexStart=-1,indexEnd=-1,indexStartBlock=-1,indexEndBlock=-1;
 
         String[] sources = source.split("\n");
             for (int i = 0;i<sources.length;i++) {
-                indexStart=sources[i].lastIndexOf("//");
                 StringBuilder tmp = new StringBuilder(sources[i]);
-                System.out.println(indexStart + sources[i]);
-                if(indexStart!=-1&&tmp.charAt(indexStart-1)!='"')
+                                                               //block who checks double slash blocks
+                indexStart=sources[i].lastIndexOf("//");
+                if(indexStart!=-1)
                 {
-                    System.out.println(tmp.charAt(indexStart-1));
+                    tmp.replace(indexStart,tmp.length(),"");
+                    sources[i] = tmp.toString();
+                }
+                            //block who checks multilines blocks
+                indexStart = sources[i].lastIndexOf("/*");
+                indexEnd = sources[i].lastIndexOf("*/");
+                if(indexEnd!=-1)
+                {
+                    indexEndBlock=indexEnd;
+                }
+                if(indexStart!=-1)
+                {
+                    indexStartBlock=indexStart;
+                    isBlockComment_noEnd=true;
+                    if(indexEnd!=-1)
+                    {
+                        tmp.replace(indexStartBlock,indexEndBlock+2,"");
+                        sources[i] = tmp.toString();
+                        isBlockComment_noEnd=false;
+                    }
+                }
+                if(isBlockComment_noEnd&&indexEndBlock!=-1)//если нашли конец блочного комментария
+                {
+                    isBlockComment_noEnd=false;
+                    tmp.replace(0,indexEndBlock+2,"");
+                    sources[i] = tmp.toString();
+                }
+                if(isBlockComment_noEnd&&indexEnd==-1)//если строчка внутри блочного комментария или вначале
+                {
+                    if(indexStart==-1)//если строчка внутри блочного комментария но не вначале
+                    {
+                        indexStart=0;
+                    }
                     tmp.replace(indexStart,tmp.length(),"");
                     sources[i] = tmp.toString();
                 }
             }
-        result = String.join("\n", sources);
-        return source;
-    }
-    public static String removeJavaComments(String source)
-    {
-        StringBuffer newSource=new StringBuffer(source);
-        int indexStart= newSource.indexOf("//");
-        int indexEnd = newSource.indexOf("\n");
-        while(indexStart!=-1)//remove comments like this one
-        {
-            if(indexEnd!=-1&&newSource.charAt(indexStart-1)!= '"')
-                newSource.replace(indexStart,indexEnd+1,"");
-            else if(newSource.charAt(indexStart-1)!= '"'){
-                newSource.delete(indexStart,newSource.length());
-            }
-           indexStart = newSource.indexOf("//");
-           indexEnd = newSource.indexOf("\n");
-        }
-        indexStart=newSource.indexOf("/*");
-        indexEnd=newSource.indexOf("");
-        while(indexStart!=-1)//remove comments like this one
-        {
-            System.out.println(indexStart + " " + indexEnd);
-            if(indexEnd!=-1)
-                newSource.replace(indexStart,indexEnd+2,"");
-            else {
-                newSource.delete(indexStart,newSource.length());
-            }
-            indexStart=newSource.indexOf("/*");
-            indexEnd=newSource.indexOf("*/");
-        }
-        return newSource.toString();
+        String result = String.join("\n", sources);
+        return result;
     }
 
     public static void main(String[] args) {
@@ -79,7 +79,7 @@ public class Task6 {
                 "//lol\n//holol\nhol\n/*loh\nhol\nlol\n*/"; // test data
         String fileName ="C:\\Users\\k5469\\OneDrive\\Рабочий стол\\testing.txt";
         String test = readFromFile(fileName);
-        String noComments = removeComments(test);
-        System.out.println(noComments);
+        System.out.println(removeJavaComments(test));
+        //System.out.println(removeComments(test));
     }
 }
