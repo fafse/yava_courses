@@ -1,0 +1,14 @@
+package test;
+    System.out.println(HELLO_MESSAGE);//здесь мы можем использовать разделитель, например: "\\A", "\\Z" или "\\z"
+ String source =
+                "//comment
+//comment
+non-comment
+show it to me/*
+*comment1
+*comment2
+*comment3
+*/"; // test data
+        String fileName ="C:\\Users\\k5469\\OneDrive\\Рабочий стол\\testing.txt";
+/*TEST*/
+/ * and * /
