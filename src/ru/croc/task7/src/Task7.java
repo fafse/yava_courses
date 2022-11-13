@@ -1,9 +1,13 @@
 package ru.croc.task7.src;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import static java.lang.Math.abs;
 
 public class Task7 {
 
+    public static int numObj = 0;
     public static class IllegalPositionException extends Exception {
         public IllegalPositionException(String message)
         {
@@ -14,7 +18,7 @@ public class Task7 {
     public static class IllegalMoveException extends Exception {
         public IllegalMoveException(Chess prevObj,Chess curObj)
         {
-            super("Конь так не ходит:" + prevObj + curObj);
+            super("Конь так не ходит:" + prevObj + "=>"+ curObj);
         }
     }
     public static class Chess extends Exception{
@@ -29,16 +33,18 @@ public class Task7 {
         }
 
         public static Chess CreateChess(String pos) throws IllegalPositionException {
-            if(pos.length()<2)
-                throw new IllegalPositionException("Wrong position:"+pos);
-            int x = pos.charAt(0)-'a';
-            int y = pos.charAt(1)-'0'-1;
-            if(x<0||y<0||x>7||y>7)
-            {
-                    throw new IllegalPositionException("Wrong position:"+pos);
-            }else {
-                return new Chess(x,y);
+            if (pos.length() < 2) {
+                throw new IllegalPositionException("Wrong position:" + pos);
             }
+            int x = pos.charAt(0) - 'a';
+            int y = pos.charAt(1) - '0' - 1;
+                if (x < 0 || y < 0 || x > 7 || y > 7) {
+                    IllegalPositionException e = new IllegalPositionException("Wrong position:" + pos);
+                    System.out.println(e.getMessage());
+                    return null;
+
+                }
+            return new Chess(x,y);
         }
 
         private Chess(int x,int y)
@@ -56,10 +62,14 @@ public class Task7 {
     }
     public static Boolean CheckKnight(Chess[] arrayIn) throws IllegalMoveException
     {
+        if(numObj==0) {
+            System.out.println("Not enough objects");
+            return false;
+        }
         Chess prevPiece= arrayIn[0];
-        for(int i = 1;i<arrayIn.length;i++)
+        for(int i = 1;i<numObj;i++)
         {
-            if(!(arrayIn[i].getX()-prevPiece.getX()==2&&arrayIn[i].getY()-prevPiece.getY()==1||arrayIn[i].getY()-prevPiece.getY()==2&&arrayIn[i].getX()-prevPiece.getX()==1))
+            if(!((abs(arrayIn[i].getX()-prevPiece.getX())==2&&abs(arrayIn[i].getY()-prevPiece.getY())==1)||(abs(arrayIn[i].getY()-prevPiece.getY())==2&&abs(arrayIn[i].getX()-prevPiece.getX())==1)))
             {
                 throw new IllegalMoveException(prevPiece,arrayIn[i]);
             }
@@ -67,36 +77,84 @@ public class Task7 {
         }
         return true;
     }
-    public static void main(String[] args){
-        Scanner cin = new Scanner(System.in);
-        Chess kon = null;
-        try {
-            kon = Chess.CreateChess("a8");
-        } catch (IllegalPositionException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Проверяем координаты. Первая должна быть от 'a' до 'h'. Вторая от 1 до 8. Пример ввода:a5");
+    public static void PrintArray(Chess[] arrayIn)
+    {
+        for(int i = 0;i<arrayIn.length;i++)
+        {
+            if(arrayIn[i]==null)
+            {
+                break;
+            }
+            System.out.println(arrayIn[i]);
         }
+    }
+    public static void main(String[] args){
         Chess[] arrayPieces = new Chess[15];
         String pos="";
-        int i = 0;
-        pos = cin.nextLine();
-        while(pos!="");
+        int menu = 0;
+        if(args!=null)
         {
-
-            try {
-                arrayPieces[i] = Chess.CreateChess(pos);
-            } catch (IllegalPositionException ex) {
-                throw new RuntimeException(ex);
+            for(int i = 0;i<args.length;i++)
+            {
+                try {
+                    arrayPieces[numObj++]= Chess.CreateChess(args[i]);
+                } catch (IllegalPositionException e) {
+                    System.out.println(e);
+                }
             }
-            i++;
-            pos = cin.nextLine();
-            System.out.println("I read:"+pos);
         }
-        try {
-            CheckKnight(arrayPieces);
-        } catch (IllegalMoveException e) {
-            throw new RuntimeException(e);
-        }
+        do{
+            try {
+                Scanner cin = new Scanner(System.in);
+                System.out.println("Menu:");
+                System.out.println("1. Add new object");
+                System.out.println("2. Check current array in CheckKnight");
+                System.out.println("3. Print objects");
+                System.out.println("0. Exit");
+                menu = cin.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(e);
+                System.out.println("You entered wrong int.");
+                menu = -1;
+            }
+            switch (menu) {
+                case 1: {
+                    System.out.println("Enter position of obj");
+                    Scanner cin = new Scanner(System.in);
+                    try {
+                        if (!((arrayPieces[numObj] = Chess.CreateChess(cin.nextLine())) == null)) {
+                            numObj++;
+                        }
+                    } catch (IllegalPositionException e) {
+                        System.out.println(e);
+                    }
+                    break;
+                }
+                case 2: {
+                    try {
+                        if(CheckKnight(arrayPieces))
+                        {
+                            System.out.println("OK");
+                        }
+                        break;
+                    } catch (IllegalMoveException e) {
+                        System.out.println(e);
+                    }
+                }
+                case 3:
+                {
+                    PrintArray(arrayPieces);
+                    break;
+                }
+                case 0: {
+                    System.out.println("Exiting...");
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }while(menu!=0);
     }
 }
 /*
