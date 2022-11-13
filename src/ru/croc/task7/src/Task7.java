@@ -4,7 +4,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static java.lang.Math.abs;
-
+/*
+Формат ввода из командной строки g6 e8 a7
+ */
 public class Task7 {
 
     public static int numObj = 0;
