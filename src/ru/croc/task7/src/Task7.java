@@ -23,7 +23,7 @@ public class Task7 {
             super("Конь так не ходит:" + prevObj + "=>"+ curObj);
         }
     }
-    public static class Chess extends Exception{
+    public static class Chess{
         protected int x,y;
 
         public int getX() {
