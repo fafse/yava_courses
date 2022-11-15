@@ -10,5 +10,12 @@ show it to me/*
 *comment3
 */"; // test data
         String fileName ="C:\\Users\\k5469\\OneDrive\\Рабочий стол\\testing.txt";
+print("dsadsad//");
+print("dsadsad//");//dhsaudhsosd}/*
+dsads
+sadsad
+f
+
+*/
 /*TEST*/
 / * and * /

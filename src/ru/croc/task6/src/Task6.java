@@ -9,6 +9,19 @@ import static java.nio.file.Files.readAllBytes;
 
 public class Task6 {
 
+    public static int NumSymbols(char symb, String str)
+    {
+        int counter = 0;
+        for(int i = 0;i<str.length();i++)
+        {
+
+            if(str.charAt(i)==symb)
+            {
+                counter++;
+            }
+        }
+        return counter;
+    }
     public static String readFromFile(String fileName)
     {
         Scanner scanner = null;
@@ -34,6 +47,21 @@ public class Task6 {
             for (int i = 0;i<sources.length;i++) {
                 StringBuilder tmp = new StringBuilder(sources[i]);
                                                                //block who checks double slash blocks
+                indexStart=sources[i].lastIndexOf("//");
+                indexEnd=sources[i].lastIndexOf("}");
+                if(indexStart!=-1&&NumSymbols('"',sources[i].substring(0,indexStart))%2>0)
+                {
+                    System.out.println(sources[i].substring(0,indexStart)) + " "+NumSymbols('"',sources[i].substring(0,indexStart)));
+                    indexEnd = sources[i].lastIndexOf("}");
+                    if(indexEnd!=-1&&indexEnd>indexStart) {
+                        tmp.replace(indexStart, indexEnd, "");
+                    }else
+                    {
+                        tmp.replace(indexStart, tmp.length(), "");
+                    }
+                    sources[i] = tmp.toString();
+                }
+                            //block who checks multilines blocks
                 indexStart = sources[i].lastIndexOf("/*");
                 indexEnd = sources[i].lastIndexOf("*/");
                 if(indexEnd!=-1)
@@ -66,14 +94,6 @@ public class Task6 {
                     tmp.replace(indexStart,tmp.length(),"");
                     sources[i] = tmp.toString();
                 }
-                indexStart=sources[i].lastIndexOf("//");
-                if(indexStart!=-1)
-                {
-                    tmp.replace(indexStart,tmp.length(),"");
-                    sources[i] = tmp.toString();
-                }
-                            //block who checks multilines blocks
-
             }
         String result = String.join("\n", sources);
         return result;
