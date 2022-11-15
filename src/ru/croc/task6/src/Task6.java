@@ -40,35 +40,25 @@ public class Task6 {
         {
             return null;
         }
+        int quotes = 0,curQuotes = 0;
         Boolean isBlockComment_noEnd = false;
         int indexStart=-1,indexEnd=-1,indexStartBlock=-1,indexEndBlock=-1;
 
         String[] sources = source.split("\n");
             for (int i = 0;i<sources.length;i++) {
                 StringBuilder tmp = new StringBuilder(sources[i]);
-                                                               //block who checks double slash blocks
-                indexStart=sources[i].lastIndexOf("//");
-                indexEnd=sources[i].lastIndexOf("}");
-                if(indexStart!=-1&&NumSymbols('"',sources[i].substring(0,indexStart))%2>0)
-                {
-                    System.out.println(sources[i].substring(0,indexStart)) + " "+NumSymbols('"',sources[i].substring(0,indexStart)));
-                    indexEnd = sources[i].lastIndexOf("}");
-                    if(indexEnd!=-1&&indexEnd>indexStart) {
-                        tmp.replace(indexStart, indexEnd, "");
-                    }else
-                    {
-                        tmp.replace(indexStart, tmp.length(), "");
-                    }
-                    sources[i] = tmp.toString();
-                }
-                            //block who checks multilines blocks
+                //block who checks multilines blocks
                 indexStart = sources[i].lastIndexOf("/*");
                 indexEnd = sources[i].lastIndexOf("*/");
-                if(indexEnd!=-1)
+                if(indexStart!=-1) {
+                    curQuotes = NumSymbols('"', sources[i].substring(0, indexStart)) % 2;
+                    quotes+=curQuotes;
+                }
+                if(indexEnd!=-1&&(quotes%2==0))
                 {
                     indexEndBlock=indexEnd;
                 }
-                if(indexStart!=-1)
+                if(indexStart!=-1&&(quotes%2==0))
                 {
                     indexStartBlock=indexStart;
                     isBlockComment_noEnd=true;
@@ -79,13 +69,13 @@ public class Task6 {
                         isBlockComment_noEnd=false;
                     }
                 }
-                if(isBlockComment_noEnd&&indexEndBlock!=-1)//если нашли конец блочного комментария
+                if(isBlockComment_noEnd&&indexEndBlock!=-1&&(quotes%2==0))//если нашли конец блочного комментария
                 {
                     isBlockComment_noEnd=false;
                     tmp.replace(0,indexEndBlock+2,"");
                     sources[i] = tmp.toString();
                 }
-                if(isBlockComment_noEnd&&indexEnd==-1)//если строчка внутри блочного комментария или вначале
+                if(isBlockComment_noEnd&&indexEnd==-1&&(quotes%2==0))//если строчка внутри блочного комментария или вначале
                 {
                     if(indexStart==-1)//если строчка внутри блочного комментария но не вначале
                     {
@@ -93,6 +83,35 @@ public class Task6 {
                     }
                     tmp.replace(indexStart,tmp.length(),"");
                     sources[i] = tmp.toString();
+                }
+                if(indexStart!=-1) {
+                    curQuotes = NumSymbols('"', sources[i].substring(indexStart, sources[i].length())) % 2;
+                    quotes+=curQuotes;
+                }
+                indexStart=indexEnd=-1;
+
+                //block who checks double slash blocks
+                indexStart=sources[i].lastIndexOf("//");
+                indexEnd=sources[i].lastIndexOf("}");
+                if(indexStart!=-1) {
+                    curQuotes = NumSymbols('"', sources[i].substring(0, indexStart)) % 2;
+                    quotes+=curQuotes;
+                }
+                if(indexStart!=-1&&(quotes%2==0))
+                {
+                    indexEnd = sources[i].lastIndexOf("}");
+                    if(indexEnd!=-1&&indexEnd>indexStart) {
+                        tmp.replace(indexStart, indexEnd+1, "");
+                    }else
+                    {
+                        tmp.replace(indexStart, tmp.length(), "");
+                    }
+                    sources[i] = tmp.toString();
+                }
+
+                if(indexStart!=-1) {
+                    curQuotes = NumSymbols('"', sources[i].substring(indexStart, sources[i].length())) % 2;
+                    quotes+=curQuotes;
                 }
             }
         String result = String.join("\n", sources);
