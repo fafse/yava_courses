@@ -2,7 +2,6 @@ package ru.croc.task7.src;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import static java.lang.Math.abs;
 /*
 Формат ввода из командной строки g6 e8 a7
@@ -10,59 +9,7 @@ import static java.lang.Math.abs;
 public class Task7 {
 
     public static int numObj = 0;
-    public static class IllegalPositionException extends Exception {
-        public IllegalPositionException(String message)
-        {
-            super(message);
-
-        }
-    }
-    public static class IllegalMoveException extends Exception {
-        public IllegalMoveException(Chess prevObj,Chess curObj)
-        {
-            super("Конь так не ходит:" + prevObj + "=>"+ curObj);
-        }
-    }
-    public static class Chess{
-        protected int x,y;
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public static Chess CreateChess(String pos) throws IllegalPositionException {
-            if (pos.length() < 2) {
-                throw new IllegalPositionException("Wrong position:" + pos);
-            }
-            int x = pos.charAt(0) - 'a';
-            int y = pos.charAt(1) - '0' - 1;
-                if (x < 0 || y < 0 || x > 7 || y > 7) {
-                    IllegalPositionException e = new IllegalPositionException("Wrong position:" + pos);
-                    System.out.println(e.getMessage());
-                    return null;
-
-                }
-            return new Chess(x,y);
-        }
-
-        private Chess(int x,int y)
-        {
-            this.x = x;
-            this.y=y;
-        }
-        @Override
-        public String toString()
-        {
-            char x = (char) ('a'+this.x);
-            String positions= ""+x+(1+this.y);
-            return positions;
-        }
-    }
-    public static Boolean CheckKnight(Chess[] arrayIn) throws IllegalMoveException
+    public static Boolean CheckKnight(Chess[] arrayIn) throws Exceptions.IllegalMoveException
     {
         if(numObj==0) {
             System.out.println("Not enough objects");
@@ -71,9 +18,10 @@ public class Task7 {
         Chess prevPiece= arrayIn[0];
         for(int i = 1;i<numObj;i++)
         {
-            if(!((abs(arrayIn[i].getX()-prevPiece.getX())==2&&abs(arrayIn[i].getY()-prevPiece.getY())==1)||(abs(arrayIn[i].getY()-prevPiece.getY())==2&&abs(arrayIn[i].getX()-prevPiece.getX())==1)))
+            if(!((abs(arrayIn[i].getX()-prevPiece.getX())==2&& abs(arrayIn[i].getY()-prevPiece.getY())==1)
+                    ||(abs(arrayIn[i].getY()-prevPiece.getY())==2&& abs(arrayIn[i].getX()-prevPiece.getX())==1)))
             {
-                throw new IllegalMoveException(prevPiece,arrayIn[i]);
+                throw new Exceptions.IllegalMoveException(prevPiece,arrayIn[i]);
             }
             prevPiece= arrayIn[i];
         }
@@ -100,7 +48,7 @@ public class Task7 {
             {
                 try {
                     arrayPieces[numObj++]= Chess.CreateChess(args[i]);
-                } catch (IllegalPositionException e) {
+                } catch (Exceptions.IllegalPositionException e) {
                     System.out.println(e);
                 }
             }
@@ -127,7 +75,7 @@ public class Task7 {
                         if (!((arrayPieces[numObj] = Chess.CreateChess(cin.nextLine())) == null)) {
                             numObj++;
                         }
-                    } catch (IllegalPositionException e) {
+                    } catch (Exceptions.IllegalPositionException e) {
                         System.out.println(e);
                     }
                     break;
@@ -139,7 +87,7 @@ public class Task7 {
                             System.out.println("OK");
                         }
                         break;
-                    } catch (IllegalMoveException e) {
+                    } catch (Exceptions.IllegalMoveException e) {
                         System.out.println(e);
                     }
                 }

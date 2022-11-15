@@ -34,13 +34,6 @@ public class Task6 {
             for (int i = 0;i<sources.length;i++) {
                 StringBuilder tmp = new StringBuilder(sources[i]);
                                                                //block who checks double slash blocks
-                indexStart=sources[i].lastIndexOf("//");
-                if(indexStart!=-1)
-                {
-                    tmp.replace(indexStart,tmp.length(),"");
-                    sources[i] = tmp.toString();
-                }
-                            //block who checks multilines blocks
                 indexStart = sources[i].lastIndexOf("/*");
                 indexEnd = sources[i].lastIndexOf("*/");
                 if(indexEnd!=-1)
@@ -73,6 +66,14 @@ public class Task6 {
                     tmp.replace(indexStart,tmp.length(),"");
                     sources[i] = tmp.toString();
                 }
+                indexStart=sources[i].lastIndexOf("//");
+                if(indexStart!=-1)
+                {
+                    tmp.replace(indexStart,tmp.length(),"");
+                    sources[i] = tmp.toString();
+                }
+                            //block who checks multilines blocks
+
             }
         String result = String.join("\n", sources);
         return result;
