@@ -34,7 +34,13 @@ public class Task6 {
         scanner.close();
         return data;
     }
-    public static String removeJavaComments(String source)
+
+    public static String RemoveJavaCommentsRegular(String source)
+    {
+        return source.replaceAll("(\\/\\/.*)|(\\/\\*([\\S\\s]+?)\\*\\/)", "");
+    }
+
+    public static String RemoveJavaComments(String source)
     {
         if(source==null)
         {
@@ -74,6 +80,8 @@ public class Task6 {
                     isBlockComment_noEnd=false;
                     tmp.replace(0,indexEndBlock+2,"");
                     sources[i] = tmp.toString();
+                    indexEndBlock=-1;
+                    indexStartBlock=-1;
                 }
                 if(isBlockComment_noEnd&&indexEnd==-1&&(quotes%2==0))//если строчка внутри блочного комментария или вначале
                 {
@@ -121,6 +129,9 @@ public class Task6 {
     public static void main(String[] args) {
         String fileName =System.getProperty("user.dir")+"\\src\\"+"testing.txt";
         System.out.println(fileName);
-        System.out.println(removeJavaComments(readFromFile(fileName)));
+        System.out.println("First way");//removing java comments with regular expressions
+        System.out.println(RemoveJavaCommentsRegular(readFromFile(fileName)));
+        System.out.println("Second way");//removing java comments with "commentslikethis//" support
+        System.out.println(RemoveJavaComments(readFromFile(fileName)));
     }
 }

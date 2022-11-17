@@ -1,21 +1,15 @@
-package test;
-    System.out.println(HELLO_MESSAGE);//здесь мы можем использовать разделитель, например: "\\A", "\\Z" или "\\z"
- String source =
-                "//comment
-//comment
-non-comment
-show it to me/*
-*comment1
-*comment2
-*comment3
-*/"; // test data
-        String fileName ="C:\\Users\\k5469\\OneDrive\\Рабочий стол\\testing.txt";
-print("dsadsad//");
-print("dsadsad//");//dhsaudhsosd}/*
-dsads
-sadsad
-f
+package ru.croc.task6;
 
-*/
-/*TEST*/
-/ * and * /
+public class Test {
+ // (>^_^)> <(^_^<)
+    public static void main(String[] args) {  //rljsdjljnkflkfklskllkwef
+        System.out.println("Hello, world!//");   /* (@_@)
+              (o_O)
+    (=_=) */
+        //rljsdjljnkflkfklskllkwef
+    /*jowfjejljeqwfjlkljqkfjlkqf
+    qefjkjkhjkeqfjjfkqejlfkeq
+    qeflkfqlk;emjfeq*/
+    }
+}
+
