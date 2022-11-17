@@ -18,8 +18,7 @@ package ru.croc.task7.src;
             int x = pos.charAt(0) - 'a';
             int y = pos.charAt(1) - '0' - 1;
             if (x < 0 || y < 0 || x > 7 || y > 7) {
-                Exceptions.IllegalPositionException e = new Exceptions.IllegalPositionException("Wrong position:" + pos);
-                System.out.println(e.getMessage());
+                System.out.println( "Wrong position:" + pos);
                 return null;
 
             }
