@@ -26,10 +26,11 @@ public class Client {
                     // не напишет в консоль
                     out.write(word + "\n"); // отправляем сообщение на сервер
                     out.flush();
-                    String serverWord = in.readLine(); // ждём, что скажет сервер
-                    System.out.println(serverWord); // получив - выводим на экран
+
                     if(word=="quit"||word=="quitserver")
                     {
+                        String serverWord = in.readLine(); // ждём, что скажет сервер
+                        System.out.println(serverWord); // получив - выводим на экран
                         break;
                     }
                 }
