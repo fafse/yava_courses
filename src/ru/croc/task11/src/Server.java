@@ -5,9 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    public void func() throws IOException {
+    public void func(int port) throws IOException {
         try{
-                ServerSocket serverSocket = new ServerSocket(2022); // 0 auto port
+                ServerSocket serverSocket = new ServerSocket(port); // 0 auto port
             System.out.println("Жду коннекта...");
                 Socket client = serverSocket.accept(); // ожидание соединения
                 System.out.println("Connected");

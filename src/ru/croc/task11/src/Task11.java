@@ -1,12 +1,35 @@
 package ru.croc.task11.src;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Task11 {
     public static void main(String[] args) throws IOException {
+        String ip = "192.168.1.109";
+        int port = 2022;
+        int menu = 0;
+        Scanner cin = new Scanner(System.in);
         ru.croc.task11.src.Server obj1 = new ru.croc.task11.src.Server();
-        obj1.func();
-        System.out.println("Hello world!");
+
+        ru.croc.task11.src.Client client = new ru.croc.task11.src.Client();
+        do {
+            System.out.println("Кто я?");
+            System.out.println("1. Сервер\n2. Клиен\n0. Выход");
+            menu = cin.nextInt();
+            switch (menu) {
+                case 1: {
+                    obj1.func(port);
+                    break;
+                }
+                case 2: {
+                    client.sendSmth(ip, port);
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }while(menu!=0);
     }
 }
 /*
