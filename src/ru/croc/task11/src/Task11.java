@@ -22,7 +22,7 @@ public class Task11 {
                     break;
                 }
                 case 2: {
-                    client.sendSmth(ip, port);
+                    5client.sendSmth(ip, port);
                     break;
                 }
                 default:{

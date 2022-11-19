@@ -8,51 +8,59 @@ public class Server {
     private ServerSocket serverSocket= null;
     Boolean is_end = false;
     public void func(int port) throws IOException {
+        BufferedWriter out=null;
+        BufferedReader in=null;
+        Socket client=null;
         do {
             try {
                 if (serverSocket == null)
                     serverSocket = new ServerSocket(port); // 0 auto port
+                is_end = false;
                 System.out.println("Жду коннекта...");
-                Socket client = serverSocket.accept(); // ожидание соединения
+                client = serverSocket.accept(); // ожидание соединения
                 System.out.println("Connected");
 
-                DataOutputStream w = new DataOutputStream(client.getOutputStream());//канал записи в сокет от клиента
+                out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));//канал записи в сокет от клиента
                 System.out.println("Канал записи в сокет от клиента создан");
 
-                DataInputStream in = new DataInputStream(client.getInputStream());//канал чтения из сокета
+                in = new BufferedReader(new InputStreamReader(client.getInputStream()));//канал чтения из сокета
                 System.out.println("Канал чтения из сокета от клиента создан");
 
                 while (!client.isClosed()) {//пока клиент не отключился обрабатываем запросы
-                    System.out.println("I try read....");
-                    String entry = in.readUTF();//читаем чё пишут
-                    System.out.println("I read " + entry);
+                    String entry = in.readLine();
+                    System.out.println(entry);//выводим то, что прочитали
                     if (entry.equalsIgnoreCase("quit")) {//проверка на выход клиента из чатика
                         System.out.println("Client initialize connections suicide ...");
-                        w.writeUTF("Server reply - "+entry + " - OK");
-                        w.flush();
+                        out.write("Server reply - " + entry + " - OK");
+                        out.flush();
                         break;
                     }
                     if (entry.equalsIgnoreCase("quitserver")) {//проверка на запрос отключения сервера
                         System.out.println("Client initialize connections suicide ...");
-                        is_end=true;
-                        w.writeUTF("Server reply - "+entry + " - OK");
-                        w.flush();
+                        is_end = true;
+                        out.write("Server reply - " + entry + " - OK");
+                        out.flush();
                         break;
                     }
-                    w.writeUTF("Server checked it");
-                    w.flush();
+                    out.write("Server checked it");
+                    out.flush();
                 }
 
 
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
                 //если вышли, освобождаем
-                w.close();
+                out.close();
                 in.close();
                 System.out.println("Работа завершена");
+                serverSocket.close();
                 client.close();
                 System.out.println("Работа с клиентом завершена");
                 //освободили
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }while(!is_end);
     }
