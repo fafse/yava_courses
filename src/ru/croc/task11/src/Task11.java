@@ -5,12 +5,11 @@ import java.util.Scanner;
 
 public class Task11 {
     public static void main(String[] args) throws IOException {
-        String ip = "192.168.1.109";
+        String ip = "192.168.1.109";//"192.168.1.109";
         int port = 2022;
         int menu = 0;
         Scanner cin = new Scanner(System.in);
         ru.croc.task11.src.Server obj1 = new ru.croc.task11.src.Server();
-
         ru.croc.task11.src.Client client = new ru.croc.task11.src.Client();
         do {
             System.out.println("Кто я?");
@@ -18,6 +17,7 @@ public class Task11 {
             menu = cin.nextInt();
             switch (menu) {
                 case 1: {
+
                     obj1.func(port);
                     break;
                 }

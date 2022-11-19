@@ -1,9 +1,7 @@
 package ru.croc.task11.src;
-
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-W
 public class Client {
     public void sendSmth(String hostname, int port) throws IOException {
         try(Socket socket = new Socket(hostname,port);
