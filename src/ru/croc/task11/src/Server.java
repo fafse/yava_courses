@@ -7,6 +7,7 @@ import java.net.Socket;
 public class Server {
     private ServerSocket serverSocket= null;
     Boolean is_end = false;
+    String entry;
     public void func(int port) throws IOException {
         BufferedWriter out=null;
         BufferedReader in=null;
@@ -27,14 +28,8 @@ public class Server {
                 System.out.println("Канал чтения из сокета от клиента создан");
 
                 while (!client.isClosed()) {//пока клиент не отключился обрабатываем запросы
-                    String entry = in.readLine();
+                    entry = in.readLine();
                     System.out.println(entry);//выводим то, что прочитали
-                    if (entry.equalsIgnoreCase("quit")) {//проверка на выход клиента из чатика
-                        System.out.println("Client initialize connections suicide ...");
-                        out.write("Server reply - " + entry + " - OK");
-                        out.flush();
-                        break;
-                    }
                     if (entry.equalsIgnoreCase("quitserver")) {//проверка на запрос отключения сервера
                         System.out.println("Client initialize connections suicide ...");
                         is_end = true;
@@ -42,6 +37,13 @@ public class Server {
                         out.flush();
                         break;
                     }
+                    if (entry.equalsIgnoreCase("quit")) {//проверка на выход клиента из чатика
+                        System.out.println("Client initialize connections suicide ...");
+                        out.write("Server reply - " + entry + " - OK");
+                        out.flush();
+                        break;
+                    }
+
                     out.write("Server checked it");
                     out.flush();
                 }
@@ -58,6 +60,7 @@ public class Server {
                 in.close();
                 System.out.println("Работа завершена");
                 serverSocket.close();
+                serverSocket=null;
                 client.close();
                 System.out.println("Работа с клиентом завершена");
                 //освободили
