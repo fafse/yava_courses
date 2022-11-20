@@ -1,4 +1,4 @@
-//package ru.croc.task11.src;
+package ru.croc.task11.src;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -8,20 +8,26 @@ public class Task11 {
         String ip = "192.168.1.109";//"192.168.1.109";
         int port = 2022;
         int menu = 0;
+        String name="";
+        ru.croc.task11.src.Client client = new ru.croc.task11.src.Client();
+        ru.croc.task11.src.Server obj1 = new ru.croc.task11.src.Server();
         Scanner cin = new Scanner(System.in);
-        Server obj1 = new Server();
-      Client client = new Client();
+
+
         do {
             System.out.println("Кто я?");
             System.out.println("1. Сервер\n2. Клиент\n0. Выход");
             menu = cin.nextInt();
+            cin.nextLine();
             switch (menu) {
                 case 1: {
                     obj1.startServer(port);
                     break;
                 }
                 case 2: {
-                    client.sendSmth(ip, port);
+                    System.out.println("Введите имя");
+                    name = cin.next();
+                    client.sendSmth(ip, port,name);
                     break;
                 }
                 default:{

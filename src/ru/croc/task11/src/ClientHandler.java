@@ -1,13 +1,18 @@
-//package ru.croc.task11.src;
+package ru.croc.task11.src;
+
 
 import java.io.*;
 import java.net.Socket;
 
+import static ru.croc.task11.src.Server.clientArr;
+
 public class ClientHandler implements Runnable{
     private Socket client=null;
+    private String name = null;
     private BufferedWriter out=null;
     private BufferedReader in=null;
-    private String entry;
+    private String entry="";
+
 
     public ClientHandler(Socket client) {
         this.client=client;
@@ -21,24 +26,35 @@ public class ClientHandler implements Runnable{
 
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));//канал чтения из сокета
             System.out.println("Канал чтения из сокета от клиента создан");
+            name = in.readLine();
+            synchronized (ru.croc.task11.src.Server.phrase) {
+                while (!client.isClosed()) {//пока клиент не отключился обрабатываем запросы
+                    /*if (ru.croc.task11.src.Server.phrase != "" && ru.croc.task11.src.Server.phrase != entry) {
+                        (ru.croc.task11.src.Server.phrase);
+                    }*/
 
-            while (!client.isClosed()) {//пока клиент не отключился обрабатываем запросы
-                entry = in.readLine();
-                System.out.println(entry);//выводим то, что прочитали
-                if (entry.equalsIgnoreCase("quitserver")) {//проверка на запрос отключения сервера
-                    System.out.println("Client initialize connections suicide ...");
-                    out.write("Server reply - " + entry + " - OK");
-                    out.flush();
-                    break;
-                }
-                if (entry.equalsIgnoreCase("quit")) {//проверка на выход клиента из чатика
-                    System.out.println("Client initialize connections suicide ...");
-                    out.write("Server reply - " + entry + " - OK");
-                    out.flush();
-                    break;
-                }
 
+                    if (entry.equalsIgnoreCase(name + "\n" + "quit") || entry.equalsIgnoreCase("quit\n")) {//проверка на выход клиента из чатика
+                        System.out.println("Client initialize connections suicide ...");
+                        out.write("Server reply - " + entry + " - OK");
+                        System.out.println("Replyied");
+                        out.flush();
+                        break;
+                    }
+                    entry = name + "\n";
+                    entry += in.readLine();
+                    for(var mc : clientArr)
+                    {
+                        if(mc != this)
+                        {
+                            mc.out.write(entry);
+                        }
+                    }
+                    ru.croc.task11.src.Server.phrase = entry;
+                    System.out.println(entry);//выводим то, что прочитали
+                }
             }
+            System.out.println("finished");
 
 
         }catch( IOException e)
