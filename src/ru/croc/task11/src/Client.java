@@ -1,4 +1,4 @@
-package ru.croc.task11.src;
+//package ru.croc.task11.src;
 
 import java.io.*;
 import java.net.Socket;

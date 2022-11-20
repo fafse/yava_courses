@@ -1,4 +1,4 @@
-package ru.croc.task11.src;
+//package ru.croc.task11.src;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -9,16 +9,15 @@ public class Task11 {
         int port = 2022;
         int menu = 0;
         Scanner cin = new Scanner(System.in);
-        ru.croc.task11.src.Server obj1 = new ru.croc.task11.src.Server();
-        ru.croc.task11.src.Client client = new ru.croc.task11.src.Client();
+        Server obj1 = new Server();
+      Client client = new Client();
         do {
             System.out.println("Кто я?");
-            System.out.println("1. Сервер\n2. Клиен\n0. Выход");
+            System.out.println("1. Сервер\n2. Клиент\n0. Выход");
             menu = cin.nextInt();
             switch (menu) {
                 case 1: {
-
-                    obj1.func(port);
+                    obj1.startServer(port);
                     break;
                 }
                 case 2: {
