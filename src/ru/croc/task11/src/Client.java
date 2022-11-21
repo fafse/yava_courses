@@ -2,55 +2,102 @@ package ru.croc.task11.src;
 
 import java.io.*;
 import java.net.Socket;
-public class Client {
-    private static Socket clientSocket; //сокет для общения
-    private static BufferedReader reader; // нам нужен ридер читающий с консоли, иначе как
-    // мы узнаем что хочет сказать клиент?
-    private static BufferedReader in; // поток чтения из сокета
-    private static BufferedWriter out; // поток записи в сокет
-    private String received = "";
-    public void sendSmth(String hostname, int port, String name) throws IOException {
-        try {
-            try {
-                // адрес - локальный хост, порт - 4004, такой же как у сервера
-                clientSocket = new Socket(hostname, port); // этой строкой мы запрашиваем
-                //  у сервера доступ на соединение
-                reader = new BufferedReader(new InputStreamReader(System.in));
-                // читать соообщения с сервера
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                // писать туда же
-                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                out.write(name+"\n");
-                out.flush();
-                while(true){
-                    System.out.println("Wait for received");
-                    received = in.readLine();
-                    System.out.println("received");
-                    System.out.println(received);
-                    System.out.print(name+">:");
-                    String word = reader.readLine();
-                    out.write(word+"\n"); // отправляем сообщение на сервер
-                    out.flush();
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
-                    if(word.equalsIgnoreCase("quit")||word.equalsIgnoreCase("quit\n"))
-                    {
-                        System.out.println("waiting server");
-                        String serverWord = in.readLine(); // ждём, что скажет сервер
-                        System.out.println("s");
-                        System.out.println(serverWord); // получив - выводим на экран
-                        break;
-                    }
+public class Client {
+    String name;
+    Scanner scanner=new Scanner(System.in, "cp866");
+    String address;
+    OutputStreamWriter writer;
+
+
+    public void run() throws IOException {
+        System.out.print("Введите адрес сервера");
+        System.out.println();
+        address = scanner.nextLine();
+
+        ChatListener chatListener = null;
+        try (Socket socket = new Socket(address, 60)) {
+
+
+            writer = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
+
+            chatListener = new ChatListener(socket);
+            Thread thread = new Thread(chatListener);
+
+            thread.start();
+
+            System.out.print("Введите имя пользователя");
+            System.out.println();
+            this.name = scanner.nextLine();
+            writer.write(this.name + "\n");
+            writer.flush();
+
+            String message;
+
+            System.out.println("Для  завершения работы введите 'quit'");
+            while (true) {
+                message = scanner.nextLine();
+                if (message.toLowerCase().equals("quit")) {
+                    writer.write(message + "\n");
+                    writer.flush();
+                    chatListener.isWork = false;
+                    break;
+                } else {
+                    writer.write(message + "\n");
+                    writer.flush();
                 }
-                System.out.println("Exited");
-            } finally { // в любом случае необходимо закрыть сокет и потоки
-                System.out.println("Клиент был закрыт...");
-                clientSocket.close();
-                in.close();
-                out.close();
+
             }
         } catch (IOException e) {
-            System.err.println(e);
+            System.out.println("Ошибка подключения");
+            this.run();
+
+        } finally {
+            writer.close();
+            scanner.close();
+
         }
+
     }
 
+    class ChatListener implements Runnable {
+
+        boolean isWork = true;
+
+        Socket socket;
+
+        public ChatListener(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            try (Scanner scanner = new Scanner(socket.getInputStream(), "utf-8")) {
+
+                while (true) {
+
+                    if(isWork) {
+                        try {
+                            System.out.println(scanner.nextLine());
+                        } catch (NoSuchElementException e){
+                            System.out.println("До встречи");
+                            break;
+                        }
+
+                    } else {
+                        scanner.close();
+                        socket.close();
+                        break;
+                    }
+
+                }
+
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+
+        }
+    }
 }

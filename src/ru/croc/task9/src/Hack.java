@@ -21,19 +21,6 @@ public class Hack implements Runnable {
         }
     }
 
-
-     /*private static String hackHashPassword(String hex) {
-         String generated_password = "";
-         int current_combination = begin;
-         while(current_combination<=end) {
-             generated_password = createPassword(current_combination++);
-             if (generated_password.equals(hex)) {
-                 System.out.println(generated_password);
-             }
-         }
-         return generated_password;
-         }*/
-
     private static String createPassword(long current_combination) {
         int[] passwordInt = new int[7];
         for (int i = 0; i < 7; i++) {

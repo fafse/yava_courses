@@ -1,46 +1,99 @@
 package ru.croc.task11.src;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+
+import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 public class Server {
-    public static String phrase="";//то, что должно быть написано всем
-    private ServerSocket serverSocket= null;
-    private int clientCurNum = 0;
-    public static ArrayList<ru.croc.task11.src.ClientHandler> clientArr = new ArrayList<ru.croc.task11.src.ClientHandler>();
-    public ArrayList<Thread> threadArr = new ArrayList<Thread>();
+    int count;
+    BlockingQueue<Connection> connectionsArrayList = new LinkedBlockingQueue<Connection>();
 
-    private Boolean is_end = false;
+    public void run() throws IOException {
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(60);
+            System.out.println("Серверный сокет создан");
 
-    public void startServer(int port) throws IOException {
+            do {
+                Socket newSocket = serverSocket.accept();
+                Connection connection = new Connection(newSocket);
+                Thread thread = new Thread(connection);
+                thread.start();
+                connectionsArrayList.add(connection);
 
-        Socket client=null;
-        do {
-            try {
-                if (serverSocket == null)
-                    serverSocket = new ServerSocket(port); // 0 auto port
-                serverSocket.setReuseAddress(true);
-                is_end = false;
-                System.out.println("Жду коннекта...");
-                client = serverSocket.accept(); // ожидание соединения
-                System.out.println("Connected");
-                clientArr.add(new ru.croc.task11.src.ClientHandler(client));
-                threadArr.add(new Thread(clientArr.get(clientCurNum)));
-                threadArr.get(clientCurNum).start();
-                clientCurNum++;
+            } while (!connectionsArrayList.isEmpty());
+            
+
+        } catch (IOException e) {
+            System.out.println("Ошибка запуска");
+        }finally {
+            serverSocket.close();
+        }
+
+    }
+
+    class Connection implements Runnable {
+
+        Socket socket;
+        Writer writer;
+        String name;
+
+        public Connection(Socket socket) {
+            this.socket = socket;
+
+        }
+
+        @Override
+        public void run() {
+
+            try (InputStream inputStream = socket.getInputStream()) {
+
+                Scanner scanner = new Scanner(inputStream, "utf-8");
+                String message;
+                this.name = scanner.nextLine();
+                message = this.name+" присоединился";
+                sendMessage(message);
+
+                while (socket.isConnected()) {
+                    message = scanner.nextLine();
+                    if (message.equals("quit")) {
+                        System.out.println(this.name + " disconnected");
+                        message =  "отключился.";
+                        sendMessage(message);
+                        connectionsArrayList.remove(this);
+                        break;
+                    }
+                    System.out.println(message);
+                    sendMessage(message);
+
+                }
 
             } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                System.out.println("Работа завершена");
-                if(serverSocket!=null) {
-                    serverSocket.close();
-                    serverSocket = null;
-                }
-                //освободили
+                System.out.println(Thread.currentThread().toString() + " не инициализирован");
             }
-        }while(!is_end);
+
+        }
+
+        private void sendMessage(String message) throws IOException {
+            for (Connection connection : connectionsArrayList) {
+
+                if (connection.equals(this)) continue;
+
+                if (connection.socket.isConnected()) {
+                    Writer writer = new OutputStreamWriter(connection.socket.getOutputStream(), "utf-8");
+                    System.out.println(this.name+">:\n"+message);
+                    writer.write(message + "\n");
+                    writer.flush();
+                } else {
+                    System.out.println("Клиент " + connection.name + " не доступен");
+                }
+
+            }
+        }
     }
 }
