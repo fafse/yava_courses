@@ -1,7 +1,8 @@
 package ru.croc.task9.src;
 public class Hack implements Runnable {
-    private static long begin;
-    private static long end;
+    private long begin;
+    public static volatile boolean is_password_found = false;
+    private long end;
     private static String hex_password;
 
     public Hack(long begin, long end, String hex_password) {
@@ -11,10 +12,10 @@ public class Hack implements Runnable {
     }
 
     public void run() {
-        for (long i = begin; i <= end && !ru.croc.task9.src.Task9.is_password_found; i++) {
+        for (long i = begin; i <= end && !is_password_found; i++) {
             String password = createPassword(i).toString();
             if (ru.croc.task9.src.Task9.hashPassword(password).equals(hex_password)) {
-                ru.croc.task9.src.Task9.is_password_found = true;
+                is_password_found = true;
                 System.out.println(password);
             }
         }

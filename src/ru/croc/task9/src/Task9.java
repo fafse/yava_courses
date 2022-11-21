@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Task9 {
     public static String[] passwordsToCheck;
     public static String[] elements = {"qwertyuiopasdfghjklzxcvbnm"};
-    public static boolean is_password_found = false;
+
     private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
     private static String toHexString(byte[] bytes) {
         StringBuilder hex = new StringBuilder(bytes.length * 2);
