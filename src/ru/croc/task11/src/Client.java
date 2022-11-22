@@ -6,24 +6,19 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Client {
-    private String name;
-    private int port;
-    private Scanner scanner=new Scanner(System.in, "cp866");
-    private String address;
-    private OutputStreamWriter writer;
-    Client(int port)
-    {
-        this.port = port;
-    }
+    String name;
+    Scanner scanner=new Scanner(System.in, "cp866");
+    String address;
+    OutputStreamWriter writer;
 
 
-    public void run() throws IOException {
+    public void StartClient(int port) throws IOException {
         System.out.print("Enter address of server");
         System.out.println();
         address = scanner.nextLine();
 
         ChatListener chatListener = null;
-        try (Socket socket = new Socket(address, 60)) {
+        try (Socket socket = new Socket(address, port)) {
 
 
             writer = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
@@ -41,7 +36,7 @@ public class Client {
 
             String message;
 
-            System.out.println("To quit print 'quit'");
+            System.out.println("To leave print 'quit'");
             while (true) {
                 message = scanner.nextLine();
                 if (message.toLowerCase().equals("quit")) {
@@ -50,14 +45,14 @@ public class Client {
                     chatListener.isWork = false;
                     break;
                 } else {
-                    writer.write(this.name+">:"+message + "\n");
+                    writer.write(this.name +">:"+message + "\n");
                     writer.flush();
                 }
 
             }
         } catch (IOException e) {
             System.out.println("Connection error");
-            this.run();
+            this.StartClient(port);
 
         } finally {
             writer.close();
