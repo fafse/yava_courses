@@ -8,6 +8,7 @@ public class Task11 {
         int menu=0;
             Scanner cin = new Scanner(System.in);
             System.out.println("Кто я?\n1. Сервер\n2. Клиент\n0. Выход");
+            int port = 2022;
             menu = cin.nextInt();
             cin.nextLine();
             switch (menu)
@@ -15,7 +16,7 @@ public class Task11 {
                 case 1:
                 {
                     try {
-                        new Server().run();
+                        new Server().startServer(port);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -23,7 +24,7 @@ public class Task11 {
                 }
                 case 2:
                 {
-                    new Client().run();
+                    new Client(port).run();
                     break;
                 }
                 default:
