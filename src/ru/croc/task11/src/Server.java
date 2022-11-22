@@ -11,9 +11,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
     int count;
-    BlockingQueue<Connection> connectionsArrayList = new LinkedBlockingQueue<Connection>();
+    public BlockingQueue<ClientHandler> clientArrayList = new LinkedBlockingQueue<ClientHandler>();
 
-    public void run() throws IOException {
+    public void startServer(int port) throws IOException {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(60);
@@ -21,13 +21,13 @@ public class Server {
 
             do {
                 Socket newSocket = serverSocket.accept();
-                Connection connection = new Connection(newSocket);
-                Thread thread = new Thread(connection);
+                ClientHandler client = new ClientHandler(newSocket);
+                Thread thread = new Thread(client);
                 thread.start();
-                connectionsArrayList.add(connection);
+                clientArrayList.add(client);
 
-            } while (!connectionsArrayList.isEmpty());
-            
+            } while (!clientArrayList.isEmpty());
+
 
         } catch (IOException e) {
             System.out.println("Ошибка запуска");
@@ -37,13 +37,13 @@ public class Server {
 
     }
 
-    class Connection implements Runnable {
+    class ClientHandler implements Runnable {
 
         Socket socket;
         Writer writer;
         String name;
 
-        public Connection(Socket socket) {
+        public ClientHandler(Socket socket) {
             this.socket = socket;
 
         }
@@ -65,7 +65,7 @@ public class Server {
                         System.out.println(this.name + " disconnected");
                         message =  "отключился.";
                         sendMessage(message);
-                        connectionsArrayList.remove(this);
+                        clientArrayList.remove(this);
                         break;
                     }
                     System.out.println(message);
@@ -80,17 +80,17 @@ public class Server {
         }
 
         private void sendMessage(String message) throws IOException {
-            for (Connection connection : connectionsArrayList) {
+            for (ClientHandler handler : clientArrayList) {
 
-                if (connection.equals(this)) continue;
+                if (handler.equals(this)) continue;
 
-                if (connection.socket.isConnected()) {
-                    Writer writer = new OutputStreamWriter(connection.socket.getOutputStream(), "utf-8");
+                if (handler.socket.isConnected()) {
+                    Writer writer = new OutputStreamWriter(handler.socket.getOutputStream(), "utf-8");
                     System.out.println(this.name+">:\n"+message);
                     writer.write(message + "\n");
                     writer.flush();
                 } else {
-                    System.out.println("Клиент " + connection.name + " не доступен");
+                    System.out.println("Клиент " + handler.name + " не доступен");
                 }
 
             }
