@@ -17,7 +17,7 @@ public class Server {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("Серверный сокет создан");
+            System.out.println("Server started");
 
             do {
                 Socket newSocket = serverSocket.accept();
@@ -30,7 +30,7 @@ public class Server {
 
 
         } catch (IOException e) {
-            System.out.println("Ошибка запуска");
+            System.out.println("Launch error");
         }finally {
             serverSocket.close();
         }
@@ -56,7 +56,7 @@ public class Server {
                 Scanner scanner = new Scanner(inputStream, "utf-8");
                 String message;
                 this.name = scanner.nextLine();
-                message = this.name+" присоединился";
+                message = this.name+" connected";
                 sendMessage(message);
 
                 while (socket.isConnected()) {
