@@ -13,7 +13,7 @@ public class Client {
 
 
     public void run() throws IOException {
-        System.out.print("Введите адрес сервера");
+        System.out.print("Enter address of server");
         System.out.println();
         address = scanner.nextLine();
 
@@ -28,7 +28,7 @@ public class Client {
 
             thread.start();
 
-            System.out.print("Введите имя пользователя");
+            System.out.print("Enter nickname");
             System.out.println();
             this.name = scanner.nextLine();
             writer.write(this.name + "\n");
@@ -36,7 +36,7 @@ public class Client {
 
             String message;
 
-            System.out.println("Для  завершения работы введите 'quit'");
+            System.out.println("To quit print 'quit'");
             while (true) {
                 message = scanner.nextLine();
                 if (message.toLowerCase().equals("quit")) {
@@ -45,13 +45,13 @@ public class Client {
                     chatListener.isWork = false;
                     break;
                 } else {
-                    writer.write(message + "\n");
+                    writer.write(this.name+">:"+message + "\n");
                     writer.flush();
                 }
 
             }
         } catch (IOException e) {
-            System.out.println("Ошибка подключения");
+            System.out.println("Connection error");
             this.run();
 
         } finally {
@@ -82,7 +82,7 @@ public class Client {
                         try {
                             System.out.println(scanner.nextLine());
                         } catch (NoSuchElementException e){
-                            System.out.println("До встречи");
+                            System.out.println("Bye");
                             break;
                         }
 

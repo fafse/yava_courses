@@ -7,7 +7,7 @@ public class Task11 {
     public static void main(String[] args) throws IOException {
         int menu=0;
             Scanner cin = new Scanner(System.in);
-            System.out.println("Кто я?\n1. Сервер\n2. Клиент\n0. Выход");
+            System.out.println("Who am I?\n1. Server\n2. Client\n");
             menu = cin.nextInt();
             cin.nextLine();
             switch (menu)

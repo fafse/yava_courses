@@ -17,7 +17,7 @@ public class Server {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(60);
-            System.out.println("Серверный сокет создан");
+            System.out.println("Server started");
 
             do {
                 Socket newSocket = serverSocket.accept();
@@ -30,7 +30,7 @@ public class Server {
             
 
         } catch (IOException e) {
-            System.out.println("Ошибка запуска");
+            System.out.println("Server start ERROR");
         }finally {
             serverSocket.close();
         }
@@ -56,14 +56,14 @@ public class Server {
                 Scanner scanner = new Scanner(inputStream, "utf-8");
                 String message;
                 this.name = scanner.nextLine();
-                message = this.name+" присоединился";
+                message = this.name+" connected";
                 sendMessage(message);
 
                 while (socket.isConnected()) {
                     message = scanner.nextLine();
                     if (message.equals("quit")) {
                         System.out.println(this.name + " disconnected");
-                        message =  "отключился.";
+                        message =  this.name + " disconnected.";
                         sendMessage(message);
                         connectionsArrayList.remove(this);
                         break;
@@ -74,7 +74,7 @@ public class Server {
                 }
 
             } catch (IOException e) {
-                System.out.println(Thread.currentThread().toString() + " не инициализирован");
+                System.out.println(Thread.currentThread().toString() + " not initialized");
             }
 
         }
@@ -90,7 +90,7 @@ public class Server {
                     writer.write(message + "\n");
                     writer.flush();
                 } else {
-                    System.out.println("Клиент " + connection.name + " не доступен");
+                    System.out.println("Client " + connection.name + " unavailable");
                 }
 
             }
