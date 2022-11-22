@@ -6,10 +6,15 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Client {
-    String name;
-    Scanner scanner=new Scanner(System.in, "cp866");
-    String address;
-    OutputStreamWriter writer;
+    private String name;
+    private int port;
+    private Scanner scanner=new Scanner(System.in, "cp866");
+    private String address;
+    private OutputStreamWriter writer;
+    Client(int port)
+    {
+        this.port = port;
+    }
 
 
     public void run() throws IOException {
