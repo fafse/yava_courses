@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadWriteFiles {
-    private ArrayList<String> films = new ArrayList<>();
+    private ArrayList<String> fileContent = new ArrayList<>();
 
-    public ArrayList<String> getFilms() {
-        return films;
+    public ArrayList<String> getFileContent() {
+        return fileContent;
     }
 
     public List<String> ReadFile(String path) {
@@ -17,20 +17,20 @@ public class ReadWriteFiles {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                films.add(line);
+                fileContent.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return films;
+        return fileContent;
     }
 
     public void WriteToFile(String path, List<String> listToWrite) throws IOException {
         File file = new File(path);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        for(var film:films)
+        for(var content:fileContent)
         {
-            writer.write(film+"\n");
+            writer.write(content+"\n");
 
         }
         writer.close();
