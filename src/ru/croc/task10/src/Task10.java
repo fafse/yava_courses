@@ -23,7 +23,7 @@ public class Task10 {
         Calendar startData = getInstance();
         Calendar endData = getInstance();
         endData.add(Calendar.SECOND,50);
-        Item r1 = Item.createItem("Huawei watch GT2", 200, startData, endData,'a');
+        Item r1 = Item.createItem("Huawei watch GT2", 200, startData, endData);
         Thread t1 = new Thread(r1);
         Thread t2 = new Thread(r1);
         Thread t3 = new Thread(r1);
