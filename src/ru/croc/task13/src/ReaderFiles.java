@@ -1,18 +1,14 @@
-package ru.croc.task12.src;
+package ru.croc.task13.src;
 
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadWriteFiles {
-    private ArrayList<String> fileContent = new ArrayList<>();
+public class ReaderFiles {
 
-    public ArrayList<String> getFileContent() {
-        return fileContent;
-    }
-
-    public List<String> ReadFile(String path) {
+    public List<String> readFile(String path) {
+        ArrayList<String> fileContent = new ArrayList<>();
         File file = new File(path);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -25,7 +21,7 @@ public class ReadWriteFiles {
         return fileContent;
     }
 
-    public void WriteToFile(String path, List<String> listToWrite) throws IOException {
+    public void writeToFile(String path, List<String> listToWrite,ArrayList<String> fileContent) throws IOException {
         File file = new File(path);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for(var content:fileContent)
