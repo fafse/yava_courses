@@ -22,6 +22,8 @@ public class Task10 {
     public static void main(String[] args) throws InterruptedException {
         Calendar startData = getInstance();
         Calendar endData = getInstance();
+        System.out.println(startData.getTimeInMillis());
+        System.out.println(endData.getTimeInMillis());
         endData.add(Calendar.SECOND,50);
         Item r1 = Item.createItem("Huawei watch GT2", 200, startData, endData);
         Thread t1 = new Thread(r1);
