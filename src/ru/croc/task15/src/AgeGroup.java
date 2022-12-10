@@ -1,12 +1,7 @@
 package ru.croc.task15.src;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
-
-import ru.croc.task15.src.Respondent;
 public class AgeGroup {
     private int lowerBound=-1;
     private int higherBound = -1;

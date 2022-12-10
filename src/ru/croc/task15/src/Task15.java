@@ -1,10 +1,6 @@
 package ru.croc.task15.src;
-import ru.croc.task15.src.AgeGroup;
-import ru.croc.task15.src.Respondent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Task15 {
     public static void main(String[] args) {
@@ -19,7 +15,7 @@ public class Task15 {
             }
         }
         groups.add(new AgeGroup(tmp+1, 123));
-
+        Collections.reverse(groups);
         stringTmp= cin.nextLine();
         while(!stringTmp.equals("END")&&!stringTmp.equals(""))
         {
