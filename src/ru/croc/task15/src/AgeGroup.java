@@ -12,18 +12,10 @@ public class AgeGroup {
     private int higherBound = -1;
 
     private List<Respondent> members = new ArrayList<>();
-    private AgeGroup(int lowerBound,int higherBound)
+    public AgeGroup(int lowerBound,int higherBound)
     {
         this.lowerBound=lowerBound;
         this.higherBound=higherBound;
-    }
-    public static AgeGroup createAgeGroup(int lowerBound,int higherBound)
-    {
-        if(lowerBound>=0&&higherBound<=123&&lowerBound<higherBound)
-        {
-            return new AgeGroup(lowerBound,higherBound);
-        }
-        return null;
     }
     public boolean addRespondent(Respondent person)
     {
@@ -54,7 +46,7 @@ public class AgeGroup {
                 msg += member.toString() + ", ";
             }
                 msg = msg.substring(0, msg.lastIndexOf(", "));
-            return msg;
+            return msg+"\n";
         }
         return "";
     }
