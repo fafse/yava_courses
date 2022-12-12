@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.*;
 public class TableJDBC {
-    String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase8";
+    String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase10";
     static final String user = "sa";
     static final String password = "";
     public void createTables()
@@ -55,7 +55,7 @@ public class TableJDBC {
                 String[] fields = line.split(",");
                 update(conn, "orders", fields[0], "'" + fields[1] + "'","'" +  fields[2] + "'");
                 if(!isAdded(conn, "'" + fields[2] + "'")) {
-                    update(conn, "ITEM",  "'" + fields[2] + "'","'" +  fields[3] + "'", fields[4]);
+                    update(conn, "ITEM",  "'" + fields[3] + "'","'" +  fields[2] + "'", fields[4]);
                 }
                 line = reader.readLine();
             }
