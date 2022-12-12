@@ -26,16 +26,14 @@ public class TableJDBC {
     }
     public static void update(Connection connection, String tableName, String first, String second, String third) throws SQLException {
         try (Statement statement = connection.createStatement()){
-            String SQL = "INSERT INTO " + tableName +  " VALUES" +
-                    "(" + first + ", " + second + ", " + third + ");";
-            statement.execute(SQL);
+            statement.execute("INSERT INTO " + tableName +  " VALUES" +
+                    "(" + first + ", " + second + ", " + third+")");
         }
     }
     public static boolean isAdded(Connection connection, String article) throws SQLException {
-        String SQL = "SELECT * FROM ITEM " +
-                "WHERE articleNumber = " + article + ";";
         try (Statement statement = connection.createStatement()){
-            try (ResultSet result = statement.executeQuery(SQL)) {
+            try (ResultSet result = statement.executeQuery("SELECT * FROM ITEM " +
+                    "WHERE articleNumber = " + article)) {
                 if (result.next()) {
                     return true;
                 }
