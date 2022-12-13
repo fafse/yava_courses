@@ -4,14 +4,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.valueOf;
+
 public class OrderDataBaseDao {
-    String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase1";
+    String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase2";
     static final String user = "sa";
     static final String password = "";
     public static void update(Connection connection, String tableName, String first, String second, String third) throws SQLException {
         try (Statement statement = connection.createStatement()){
             statement.execute("INSERT INTO " + tableName +  " VALUES" +
-                    "(" + first + ", " + second + ", " + third+")");
+                    "(" + first + ", " + second + ", " + third+")");            System.out.println("here");
+
         }
     }
     public Order createOrder(String userLogin, List<Product> products) {
@@ -19,19 +22,26 @@ public class OrderDataBaseDao {
     Для указанного пользователя в базе данных создается новый заказ с заданным списком товаров.*/
         try(Connection conn = DriverManager.getConnection(connectionUrl, user, password)){
             try (Statement statement = conn.createStatement()) {
-                try (ResultSet result = statement.executeQuery("select max(numberOrder) from " + "'" + "orders" + "'")) {
-                    int number;
+                Integer number;
+                try (ResultSet result = statement.executeQuery("SELECT max(numberorder) FROM ORDERS")) {
                 if(result.next())
                 {
-                    number = result.getInt("max(numberOrder"+1);
+
+                    number = result.getInt("MAX(NUMBERORDER)") + 1;
+
                 }else
                 {
                     number = 0;
                 }
+
                     for (var product:
                          products) {
-                        update(conn,"orders",product.getNameGoods(),product.getArticleNumber(),Integer.toString(product.getPrice()));
+
+                        update(conn,"orders", "'" + Integer.toString(number)+"'" ,"'" + product.getNameGoods()+"'","'" +product.getArticleNumber()+"'");
+                        number++;
+
                     }
+
                 }
             }
         } catch (SQLException e) {
