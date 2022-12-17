@@ -1,30 +1,31 @@
-package ru.croc.Task16;
+package ru.croc.Task16.src;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import ru.croc.Task16.TaxiDriver;
+import java.sql.Driver;
+import java.util.*;
 
 public class TaxiFinder {
     List<TaxiDriver> drivers;
     public TaxiFinder(List<TaxiDriver> drivers)
     {
-        if(!drivers.isEmpty())
-        {
-            this.drivers = new ArrayList<>();
-            this.drivers.addAll(drivers);
-        }
+            this.drivers=drivers;
+    }
+    private List<TaxiDriver> getDrivers()
+    {
+        return new ArrayList<>(drivers);
     }
 
-
-    public TaxiDriver findDriver(List<String> requirements, double latitude, double longitude, String comfortClass)
+    public TaxiDriver findDriver(Set<String> requirements, double latitude, double longitude, String comfortClass)
     {
+        List<TaxiDriver> tmpDrivers = getDrivers();
+        if(tmpDrivers.isEmpty())
+        {
+            return null;
+        }
         Comparator<TaxiDriver> comparator = (td1,td2)->
         {
             if(td1!=null&&td2!=null) {
-                boolean is_1_ok = td1.checkmatch(comfortClass,requirements);
-                boolean is_2_ok =td2.checkmatch(comfortClass,requirements);
-                //System.out.println(td1 + " and " + td1.getComfortClass().equals(comfortClass) + "\n"+td2 + " and "+td2.getComfortClass().equals(comfortClass));
+                boolean is_1_ok = td1.checkMatch(comfortClass,requirements);
+                boolean is_2_ok =td2.checkMatch(comfortClass,requirements);
                 if (is_1_ok
                         && is_2_ok) {
                     return Double.compare((Math.abs(td1.getLatitude() - latitude) + Math.abs(td1.getLongitude() - longitude)), (Math.abs(td2.getLatitude() - latitude) + Math.abs(td2.getLongitude() - longitude)));
@@ -39,10 +40,10 @@ public class TaxiFinder {
             }
             return 0;
         };
-        drivers.sort(comparator);
-        if(drivers.get(0).checkmatch(comfortClass,requirements))
+        tmpDrivers.sort(comparator);
+        if(tmpDrivers.get(0).checkMatch(comfortClass,requirements))
         {
-            return drivers.get(0);
+            return tmpDrivers.get(0);
         }
         return null;
     }

@@ -1,45 +1,41 @@
-package ru.croc.Task16;
+package ru.croc.Task16.src;
 /*пример ввода параметров
-59.9386
-30.3141
-comfort
-kids
+59.9386 30.3141 comfort kids
 * */
 
-import ru.croc.Task16.TaxiDriver;
 
-import java.util.ArrayList;
-import ru.croc.Task16.TaxiFinder;
-
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Task16 {
     public static void main(String[] args) {
+        Scanner cin = new Scanner(System.in);
         double latitude, longitude;
         String classComfort;
-        List<String> requirements=new ArrayList<>();
-        if(args.length<4)
+        Set<String> requirements = new HashSet<>();
+
+        String[] client = cin.nextLine().split(" ");
+        if(client.length<4)
         {
-            System.out.println("Wrong args num"+args.length);
+            System.out.println("Lack of elements");
             return;
         }
-        latitude = Double.parseDouble(args[0]);
-        longitude = Double.parseDouble(args[1]);
-        requirements.clear();
-        classComfort = args[2];
-        for(int i = 3;i< args.length;i++)
-        {
-            requirements.add(args[i]);
+
+
+        latitude = Double.parseDouble(client[0]);
+        longitude = Double.parseDouble(client[1]);
+        classComfort = client[2];
+        for(int i = 3;i< client.length;i++) {
+            requirements.add(client[i]);
         }
-        List<TaxiDriver> drivers = new ArrayList<>();
-        TaxiDriver tmp = new TaxiDriver("comfort",59.9,58.9, Collections.singletonList("kids"),"onedriver");
-        drivers.add(tmp);
-        tmp =new TaxiDriver("free",50,58.9, Collections.singletonList("music"),"twodriver");
-                drivers.add(tmp);
-        tmp =new TaxiDriver("comfort",59.9,58.9, Collections.singletonList("music"),"threedriver");
-                drivers.add(tmp);
+
+        List<TaxiDriver> drivers = new ArrayList<TaxiDriver>();
+
+        drivers.add(new TaxiDriver("comfort",59.9,58.9,Set.of("kids") ,"onedriver"));
+        drivers.add(new TaxiDriver("free",50,58.9, Set.of("music"),"twodriver"));
+        drivers.add(new TaxiDriver("comfort",59.9,58.9, Set.of("music"),"threedriver"));
+
         TaxiFinder finder = new TaxiFinder(drivers);
+
         System.out.println(finder.findDriver(requirements,latitude,longitude,classComfort));
     }
 }
