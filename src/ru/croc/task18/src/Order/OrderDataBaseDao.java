@@ -35,23 +35,33 @@ public class OrderDataBaseDao {
 
     public void update(String tableName,
                        String first,
-                       String second) throws SQLException {
+                       String second,
+                       String third) throws SQLException {
 
         statement.execute("INSERT INTO " + tableName + " VALUES" + "(" +
                 first + ", " +
-                second +")");
+                second + ", " +
+                third+")");
     }
 
     public Order createOrder(String userLogin,
                              List<Product> products) {//change
     /*Создание заказа.
     Для указанного пользователя в базе данных создается новый заказ с заданным списком товаров.*/
-        Order order=new Order(userLogin,products);
-
-
-                update("orders",
-                        "'" + product.getNameGoods() + "'",
-                        "'" + product.getArticleNumber() + "'");
+        List<String> articleNumbers = new ArrayList<>();
+        for(var product:products)
+        {
+            articleNumbers.add(product.getArticleNumber());
+        }
+        Order order=new Order(userLogin,
+                articleNumbers);
+        try {
+            statement.execute("INSERT INTO " + "orders(name,articleNumber)" + " VALUES" + "("+
+                    "'"+order.getName() +"'"+ ", " +
+                    "'"+order.getArticleNumber()+"'" + ")");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return order;
     }
 }

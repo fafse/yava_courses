@@ -102,7 +102,8 @@ public class TableJDBC {
             update("ITEM", "'" + item.getName() + "'", "'" + item.getArticle() + "'", Integer.toString(item.getPrice()));
         }
         for (var order : orderList) {
-            update("ORDERS", "'" + order.getNumberOrder() + "'", "'" + order.getName() + "'", "'" + order.getArticle() + "'");
+            statement.execute("INSERT INTO " + "ORDERS(name,articleNumber)" + " VALUES" +
+                    "(" + "'" + order.getName() + "'" + ", " + "'" + order.getArticle() + "'"+ ")");
         }
     }
 
