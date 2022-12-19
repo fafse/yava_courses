@@ -1,14 +1,22 @@
 package ru.croc.task17.src;
 
+import Item.Item;
+import Order.Order;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
+
 public class TableJDBC {
-    String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase10";
-    static final String user = "sa";
-    static final String password = "";
+    private String connectionUrl = "jdbc:h2:/DataBaseFiles/ShopDataBase10";
+    private static final String user = "sa";
+    private static final String password = "";
     public void createTables()
     {
         try(Connection conn = DriverManager.getConnection(connectionUrl, user, password)){
@@ -30,31 +38,60 @@ public class TableJDBC {
                     "(" + first + ", " + second + ", " + third+")");
         }
     }
-    public static boolean isAdded(Connection connection, String article) throws SQLException {
-        try (Statement statement = connection.createStatement()){
-            try (ResultSet result = statement.executeQuery("SELECT * FROM ITEM " +
-                    "WHERE articleNumber = " + article)) {
-                if (result.next()) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        }
-    }
 
-    public void filltable(String pathFile) throws IOException {
+    public void fillTable(String pathFile) throws IOException {
         try(Connection conn = DriverManager.getConnection(connectionUrl, user, password)){
             BufferedReader reader = new BufferedReader(new FileReader(pathFile));
             String line = reader.readLine();
+            Set<Order> orderList= new HashSet<Order>();
+            Set<Item> itemList= new HashSet<Item>();
+            String name,articleNumber,nameGoods,price,numberOrder;
+            try (Statement statement = conn.createStatement()){
+                statement.execute("delete from orders");
+                statement.execute("delete from item");
+            }
             while (line != null) {
                 String[] fields = line.split(",");
-                update(conn, "orders", fields[0], "'" + fields[1] + "'","'" +  fields[2] + "'");
-                if(!isAdded(conn, "'" + fields[2] + "'")) {
-                    update(conn, "ITEM",  "'" + fields[3] + "'","'" +  fields[2] + "'", fields[4]);
+                numberOrder=fields[0];
+                name = fields[1];
+                articleNumber=fields[2];
+                nameGoods=fields[3];
+                price=fields[4];
+                Boolean is_exists=false;
+                for (var item:itemList)
+                {
+                    if(item.getArticle().equals(articleNumber))
+                    {
+                        is_exists=true;
+                        break;
+                    }
+                }
+                if(!is_exists)
+                {
+                    itemList.add(new Item(articleNumber,name,Integer.parseInt(price.replace(" ",""))));
+                }
+                is_exists=false;
+                for (var order:orderList)
+                {
+                    if(order.getNumberOrder().equals(numberOrder))
+                    {
+                        order.addArticle(articleNumber);
+                        is_exists=true;
+                        break;
+                    }
+                }
+                if(!is_exists){
+                    orderList.add(new Order(numberOrder,name,articleNumber));
                 }
                 line = reader.readLine();
+            }
+            for(var item:itemList)
+            {
+                update(conn, "ITEM",  "'" + item.getName() + "'","'" +  item.getArticle() + "'", Integer.toString(item.getPrice()));
+            }
+            for(var order:orderList)
+            {
+                update(conn, "ORDERS",  "'" + order.getNumberOrder() + "'","'" +  order.getName() + "'", "'"+order.getArticle()+"'");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

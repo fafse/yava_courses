@@ -9,6 +9,6 @@ public class Task17 {
 
         ru.croc.task17.src.TableJDBC tableJDBC = new ru.croc.task17.src.TableJDBC();
         tableJDBC.createTables();
-        tableJDBC.filltable(args[0]);
+        tableJDBC.fillTable(args[0]);
     }
 }
